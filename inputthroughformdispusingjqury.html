@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Input and Display Example</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Form Input and Display Example</h2>
+
+<form id="myForm">
+  <label for="fname">First Name:</label><br>
+  <input type="text" id="fname" name="fname"><br>
+
+  <label for="lname">Last Name:</label><br>
+  <input type="text" id="lname" name="lname"><br>
+
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email"><br>
+
+  <label for="age">Age:</label><br>
+  <input type="number" id="age" name="age"><br>
+
+  <label for="gender">Gender:</label><br>
+  <select id="gender" name="gender">
+    <option value="">Select gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+<div id="displayInfo"></div>
+
+<script>
+$(document).ready(function() {
+  $('#myForm').submit(function(event) {
+    event.preventDefault(); // Prevent default form submission
+    
+    // Capture form data
+    var formData = {
+      fname: $('#fname').val(),
+      lname: $('#lname').val(),
+      email: $('#email').val(),
+      age: $('#age').val(),
+      gender: $('#gender').val()
+    };
+    
+    // Clear previous display
+    $('#displayInfo').empty();
+    
+    // Display captured data
+    var infoHtml = '<h3>Submitted Information:</h3>' +
+                   '<p><strong>First Name:</strong> ' + formData.fname + '</p>' +
+                   '<p><strong>Last Name:</strong> ' + formData.lname + '</p>' +
+                   '<p><strong>Email:</strong> ' + formData.email + '</p>' +
+                   '<p><strong>Age:</strong> ' + formData.age + '</p>' +
+                   '<p><strong>Gender:</strong> ' + formData.gender + '</p>';
+    
+    $('#displayInfo').html(infoHtml);
+  });
+});
+</script>
+
+</body>
+</html>

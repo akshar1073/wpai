@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+</head>
+<body>
+    <h1>Quiz Game</h1>
+    <div id="quizSelection"></div>
+    <div id="quizQuestions" style="display:none;">
+        <h2 id="quizTitle"></h2>
+        <form id="quizForm"></form>
+    </div>
+    <div id="results" style="display:none;">
+        <h2>Results</h2>
+        <p id="score"></p>
+        <button onclick="restart()">Restart</button>
+    </div>
+
+    <script>
+        const quizzes = {
+            history: {
+                title: "History Quiz",
+                questions: [
+                    { q: "First US President?", o: ["George Washington", "Thomas Jefferson", "John Adams", "Benjamin Franklin"], a: 0 },
+                    { q: "World War II end year?", o: ["1943", "1944", "1945", "1946"], a: 2 }
+                ]
+            },
+            science: {
+                title: "Science Quiz",
+                questions: [
+                    { q: "Chemical symbol for gold?", o: ["Au", "Ag", "Fe", "Cu"], a: 0 },
+                    { q: "Largest planet in our solar system?", o: ["Mars", "Venus", "Jupiter", "Saturn"], a: 2 }
+                ]
+            }
+        };
+
+        let currentQuiz;
+
+        function showQuiz(type) {
+            currentQuiz = quizzes[type];
+            document.getElementById('quizTitle').textContent = currentQuiz.title;
+            document.getElementById('quizForm').innerHTML = currentQuiz.questions.map((q, i) => `
+                <p><strong>${q.q}</strong></p>
+                ${q.o.map((o, j) => `<label><input type="radio" name="q${i}" value="${j}">${o}</label><br>`).join('')}
+            `).join('') + '<button type="submit">Submit</button>';
+            document.getElementById('quizSelection').style.display = 'none';
+            document.getElementById('quizQuestions').style.display = 'block';
+        }
+
+        document.getElementById('quizSelection').innerHTML = Object.keys(quizzes).map(q => 
+            `<button onclick="showQuiz('${q}')">${quizzes[q].title}</button>`
+        ).join('');
+
+        document.getElementById('quizForm').onsubmit = function(e) {
+            e.preventDefault();
+            let score = currentQuiz.questions.filter((q, i) => 
+                document.querySelector(`input[name="q${i}"]:checked`)?.value == q.a
+            ).length;
+            document.getElementById('score').textContent = `Score: ${score}/${currentQuiz.questions.length}`;
+            document.getElementById('quizQuestions').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+        };
+
+        function restart() {
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('quizSelection').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

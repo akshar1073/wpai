@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        #weather-status {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Weather App</h1>
+    <form id="weather-form">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+        </div>
+        <input type="submit" value="Get Weather">
+    </form>
+    <div id="weather-status"></div>
+</div>
+
+<script>
+document.getElementById('weather-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const city = document.getElementById('city').value;
+
+    if (navigator.onLine) {
+        // Attempt to fetch real weather data
+        const geocodeUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}`;
+
+        fetch(geocodeUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.results && data.results.length > 0) {
+                    const latitude = data.results[0].latitude;
+                    const longitude = data.results[0].longitude;
+
+                    // Fetch weather data from Open-Meteo
+                    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+
+                    return fetch(weatherUrl);
+                } else {
+                    throw new Error('City not found');
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const weatherDescription = data.current_weather.weathercode;
+                const temperature = data.current_weather.temperature;
+                document.getElementById('weather-status').innerHTML = `
+                    <h2>Weather in ${city}</h2>
+                    <p>Weather Code: ${weatherDescription}</p>
+                    <p>Temperature: ${temperature}°C</p>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('weather-status').innerHTML = `<p>An error occurred. Please try again later.</p>`;
+                console.error('Error fetching the weather data:', error);
+            });
+    } else {
+        // Fallback for when there is no internet connection
+        const dummyWeatherDescription = "Partly cloudy";
+        const dummyTemperature = 25; // Dummy temperature in Celsius
+        document.getElementById('weather-status').innerHTML = `
+            <h2>Weather in ${city}</h2>
+            <p>Weather: ${dummyWeatherDescription}</p>
+            <p>Temperature: ${dummyTemperature}°C</p>
+        `;
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Input and Display Example</title>
+</head>
+<body>
+
+<h2>Form Input and Display Example</h2>
+
+<form id="myForm">
+  <label for="fname">First Name:</label><br>
+  <input type="text" id="fname" name="fname"><br>
+
+  <label for="lname">Last Name:</label><br>
+  <input type="text" id="lname" name="lname"><br>
+
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email"><br>
+
+  <label for="age">Age:</label><br>
+  <input type="number" id="age" name="age"><br>
+
+  <label for="gender">Gender:</label><br>
+  <select id="gender" name="gender">
+    <option value="">Select gender</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+<div id="displayInfo"></div>
+
+<script>
+document.getElementById('myForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent default form submission
+
+  // Capture form data
+  var formData = {
+    fname: document.getElementById('fname').value,
+    lname: document.getElementById('lname').value,
+    email: document.getElementById('email').value,
+    age: document.getElementById('age').value,
+    gender: document.getElementById('gender').value
+  };
+
+  // Clear previous display
+  var displayDiv = document.getElementById('displayInfo');
+  displayDiv.innerHTML = '';
+
+  // Display captured data
+  var infoHeading = document.createElement('h3');
+  infoHeading.textContent = 'Submitted Information:';
+  displayDiv.appendChild(infoHeading);
+
+  var infoList = document.createElement('ul');
+
+  for (var key in formData) {
+    if (formData.hasOwnProperty(key)) {
+      var infoItem = document.createElement('li');
+      infoItem.innerHTML = '<strong>' + key.charAt(0).toUpperCase() + key.slice(1) + ':</strong> ' + formData[key];
+      infoList.appendChild(infoItem);
+    }
+  }
+
+  displayDiv.appendChild(infoList);
+});
+</script>
+
+</body>
+</html>

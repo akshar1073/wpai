@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation with jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword"><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age"><br>
+
+        <label for="website">Website:</label>
+        <input type="url" id="website" name="website"><br>
+
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+            <option value="">Select a country</option>
+            <option value="usa">USA</option>
+            <option value="uk">UK</option>
+            <option value="canada">Canada</option>
+        </select><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+    $(document).ready(function() {
+        $('#registrationForm').submit(function(e) {
+            e.preventDefault();
+            $('.error').remove();
+            let isValid = true;
+
+            // Name validation
+            let name = $('#name').val().trim();
+            if (name === '') {
+                $('#name').after('<span class="error">Name is required</span>');
+                isValid = false;
+            }
+
+            // Email validation
+            let email = $('#email').val().trim();
+            if (email === '') {
+                $('#email').after('<span class="error">Email is required</span>');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                $('#email').after('<span class="error">Enter a valid email address</span>');
+                isValid = false;
+            }
+
+            // Password validation
+            let password = $('#password').val();
+            if (password.length < 6) {
+                $('#password').after('<span class="error">Password must be at least 6 characters long</span>');
+                isValid = false;
+            }
+
+            // Confirm Password validation
+            let confirmPassword = $('#confirmPassword').val();
+            if (password !== confirmPassword) {
+                $('#confirmPassword').after('<span class="error">Passwords do not match</span>');
+                isValid = false;
+            }
+
+            // Age validation
+            let age = $('#age').val();
+            if (age === '' || age < 18) {
+                $('#age').after('<span class="error">You must be at least 18 years old</span>');
+                isValid = false;
+            }
+
+            // Website validation
+            let website = $('#website').val().trim();
+            if (website !== '' && !/^https?:\/\/.+\..+$/.test(website)) {
+                $('#website').after('<span class="error">Enter a valid URL</span>');
+                isValid = false;
+            }
+
+            // Country validation
+            let country = $('#country').val();
+            if (country === '') {
+                $('#country').after('<span class="error">Please select a country</span>');
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert('Form submitted successfully!');
+                // You can submit the form or perform other actions here
+            }
+        });
+    });
+    </script>
+</body>
+</html>
